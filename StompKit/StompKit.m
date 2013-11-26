@@ -9,7 +9,7 @@
 #import "StompKit.h"
 #import "GCDAsyncSocket.h"
 
-#define kDefaultTimeout 5
+#define kDefaultTimeout 30
 #define kVersion1_2 @"1.2"
 #define kNoHeartBeat @"0,0"
 
@@ -116,7 +116,9 @@
 
 + (STOMPFrame *) STOMPFrameFromData:(NSData *)data {
     NSData *strData = [data subdataWithRange:NSMakeRange(0, [data length])];
-	NSString *msg = [[NSString alloc] initWithData:strData encoding:NSUTF8StringEncoding];
+    NSString *msg = [[NSString alloc] initWithData:strData encoding:NSUTF8StringEncoding];
+    NSCharacterSet *whitespace = [NSCharacterSet whitespaceAndNewlineCharacterSet];
+    msg = [msg stringByTrimmingCharactersInSet:whitespace];
     LogDebug(@"<<< %@", msg);
     NSMutableArray *contents = (NSMutableArray *)[[msg componentsSeparatedByString:kLineFeed] mutableCopy];
 	if([[contents objectAtIndex:0] isEqual:@""]) {
